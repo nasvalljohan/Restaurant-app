@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +33,7 @@ import com.nasvalljohan.myapplication.ui.theme.font.TextHeadline2
 import com.nasvalljohan.myapplication.ui.theme.font.TextTitle1
 import com.nasvalljohan.myapplication.viewmodel.ListScreenEvent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PopUp(onEvent: (ListScreenEvent) -> Unit) {
     Column(
@@ -57,19 +61,25 @@ fun PopUp(onEvent: (ListScreenEvent) -> Unit) {
             )
         }
 
-        Column(
+        ElevatedCard(
             modifier = Modifier
                 .offset(y = (-45).dp)
-                .size(343.dp, 144.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.White)
-                .padding(16.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.SpaceBetween,
+                .size(343.dp, 144.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
         ) {
-            TextHeadline1(text = "Emilias Fancy Food", color = DarkText)
-            TextHeadline2(text = "Take-Out - Fast Delivery - Eat-In", color = Subtitle)
-            TextTitle1(text = "Open", color = Positive)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                TextHeadline1(text = "Emilias Fancy Food", color = DarkText)
+                TextHeadline2(text = "Take-Out - Fast Delivery - Eat-In", color = Subtitle)
+                TextTitle1(text = "Open", color = Positive)
+            }
         }
     }
 }

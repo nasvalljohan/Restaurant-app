@@ -16,11 +16,12 @@ import com.nasvalljohan.myapplication.R
 
 @Composable
 fun LogoBar() {
-    Row(Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
         Image(painter = painterResource(id = R.drawable.umain_logo), contentDescription = null, modifier = Modifier.size(54.dp))
         Spacer(Modifier.width(54.dp))
     }

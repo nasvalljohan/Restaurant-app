@@ -7,11 +7,15 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +65,7 @@ fun FilterList(onEvent: (ListScreenEvent) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FilterListItem(
     drawable: Int,
@@ -68,25 +73,32 @@ private fun FilterListItem(
     text: String,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    ElevatedCard(
         modifier = Modifier
             .then(modifier)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color.White),
+            .clip(RoundedCornerShape(24.dp)),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
     ) {
-        Image(
-            painter = painterResource(id = drawable),
-            contentDescription = contentDescription,
+        Box(
             modifier = Modifier
-                .size(48.dp)
-                .align(Alignment.CenterStart),
-        )
-        TextTitle2(
-            text = text,
-            color = DarkText,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp),
-        )
+                .fillMaxSize()
+                .clip(RoundedCornerShape(24.dp))
+                .background(Color.White),
+        ) {
+            Image(
+                painter = painterResource(id = drawable),
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .size(48.dp)
+                    .align(Alignment.CenterStart),
+            )
+            TextTitle2(
+                text = text,
+                color = DarkText,
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp),
+            )
+        }
     }
 }
