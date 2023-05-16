@@ -55,7 +55,6 @@ private fun ListItem(
         Modifier
             .size(343.dp, 196.dp)
             .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp))
-            .background(Color.White)
             .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurantId)) },
     ) {
         Box(
