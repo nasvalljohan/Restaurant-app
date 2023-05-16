@@ -1,6 +1,7 @@
 package com.nasvalljohan.myapplication.ui.listscreen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,17 +21,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nasvalljohan.myapplication.R
+import com.nasvalljohan.myapplication.ui.theme.Background
 import com.nasvalljohan.myapplication.ui.theme.DarkText
 import com.nasvalljohan.myapplication.ui.theme.Positive
 import com.nasvalljohan.myapplication.ui.theme.Subtitle
 import com.nasvalljohan.myapplication.ui.theme.font.TextHeadline1
 import com.nasvalljohan.myapplication.ui.theme.font.TextHeadline2
 import com.nasvalljohan.myapplication.ui.theme.font.TextTitle1
+import com.nasvalljohan.myapplication.viewmodel.ListScreenEvent
 
 @Composable
-fun PopUp() {
+fun PopUp(onEvent: (ListScreenEvent) -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Background),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -49,7 +52,8 @@ fun PopUp() {
                 contentDescription = "Close pop-up",
                 modifier = Modifier
                     .padding(top = 40.dp, start = 22.dp)
-                    .align(Alignment.TopStart),
+                    .align(Alignment.TopStart)
+                    .clickable { onEvent(ListScreenEvent.BackPress) },
             )
         }
         Column(
