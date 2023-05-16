@@ -13,4 +13,5 @@ data class ListScreenState(
     val isPopUpOpen: Boolean = false,
     val restaurants: List<Restaurants> = emptyList(),
     val filters: List<Filter> = emptyList(),
+    val isLoading: Boolean = true,
 )

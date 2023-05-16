@@ -21,6 +21,7 @@ import com.nasvalljohan.myapplication.ui.listscreen.components.PopUp
 import com.nasvalljohan.myapplication.ui.listscreen.components.RestaurantList
 import com.nasvalljohan.myapplication.ui.theme.Background
 import com.nasvalljohan.myapplication.viewmodel.ListScreenEvent
+import com.nasvalljohan.myapplication.viewmodel.ListScreenState
 import com.nasvalljohan.myapplication.viewmodel.ListScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +36,7 @@ fun ListScreen(viewModel: ListScreenViewModel = koinViewModel()) {
             onEvent = {
                 viewModel.handleEvents(it)
             },
-            isPopUpOpen = viewModel.state.value.isPopUpOpen,
+            state = viewModel.state.value,
         )
     }
 }
@@ -43,7 +44,7 @@ fun ListScreen(viewModel: ListScreenViewModel = koinViewModel()) {
 @Composable
 fun ListScreenContent(
     onEvent: (ListScreenEvent) -> Unit,
-    isPopUpOpen: Boolean,
+    state: ListScreenState,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -62,7 +63,7 @@ fun ListScreenContent(
             }
         }
         AnimatedVisibility(
-            visible = isPopUpOpen,
+            visible = state.isPopUpOpen,
             enter = slideInVertically(
                 initialOffsetY = { it },
                 animationSpec = tween(

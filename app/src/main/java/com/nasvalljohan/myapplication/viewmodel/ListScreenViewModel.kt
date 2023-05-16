@@ -38,6 +38,8 @@ class ListScreenViewModel(
     }
 
     private fun getRestaurants() {
+        setState.value = ListScreenState(isLoading = true)
+
         viewModelScope.launch {
             val response = getRestaurantUseCase()
             setState.value = ListScreenState(restaurants = response.toList())
