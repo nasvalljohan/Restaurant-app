@@ -1,6 +1,7 @@
 package com.nasvalljohan.myapplication.ui.listscreen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -73,11 +74,11 @@ fun ListScreenContent(
                 targetOffsetY = { it },
                 animationSpec = tween(
                     durationMillis = 350,
-                    easing = LinearOutSlowInEasing,
+                    easing = LinearEasing,
                 ),
             ),
         ) {
-            PopUp()
+            PopUp(onEvent = onEvent)
         }
     }
 }
