@@ -35,7 +35,7 @@ fun ListScreen(viewModel: ListScreenViewModel = koinViewModel()) {
             onEvent = {
                 viewModel.handleEvents(it)
             },
-            isPopUpOpen = viewModel.isPopUpOpen.value,
+            isPopUpOpen = viewModel.state.value.isPopUpOpen,
         )
     }
 }
