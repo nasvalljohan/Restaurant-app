@@ -59,7 +59,7 @@ fun ListScreenContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
             ) {
-                RestaurantList(onEvent = onEvent)
+                RestaurantList(onEvent = onEvent, state = state)
             }
         }
         AnimatedVisibility(

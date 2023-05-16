@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nasvalljohan.myapplication.R
+import com.nasvalljohan.myapplication.ui.repository.model.Restaurant
 import com.nasvalljohan.myapplication.ui.theme.DarkText
 import com.nasvalljohan.myapplication.ui.theme.Footer
 import com.nasvalljohan.myapplication.ui.theme.Subtitle
@@ -32,19 +33,19 @@ import com.nasvalljohan.myapplication.ui.theme.font.TextFooter1
 import com.nasvalljohan.myapplication.ui.theme.font.TextSubtitle1
 import com.nasvalljohan.myapplication.ui.theme.font.TextTitle1
 import com.nasvalljohan.myapplication.viewmodel.ListScreenEvent
-
-val list = listOf(1, 2, 3, 4, 5)
+import com.nasvalljohan.myapplication.viewmodel.ListScreenState
 
 @Composable
-fun RestaurantList(onEvent: (ListScreenEvent) -> Unit) {
+fun RestaurantList(onEvent: (ListScreenEvent) -> Unit, state: ListScreenState) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(list) {
-            ListItem(onEvent = onEvent, restaurantId = it)
+        items(state.restaurants) { item ->
+            println(item)
+            ListItem(onEvent = onEvent, restaurant = item)
         }
     }
 }
@@ -53,7 +54,7 @@ fun RestaurantList(onEvent: (ListScreenEvent) -> Unit) {
 @Composable
 private fun ListItem(
     onEvent: (ListScreenEvent) -> Unit,
-    restaurantId: Int,
+    restaurant: Restaurant,
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -64,7 +65,7 @@ private fun ListItem(
             Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp))
-                .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurantId)) },
+                .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurant.id.toInt())) },
         ) {
             Box(
                 modifier = Modifier
@@ -81,8 +82,10 @@ private fun ListItem(
                     modifier = Modifier.padding(8.dp),
                     verticalArrangement = Arrangement.Top.also { Arrangement.spacedBy(2.dp) },
                 ) {
-                    TextTitle1(text = "Wayne's Smelly Eggs", color = DarkText)
-                    TextSubtitle1(text = "Take-out", color = Subtitle)
+                    TextTitle1(text = restaurant.name, color = DarkText)
+                    if (restaurant.filterIds.isNotEmpty()) {
+                        TextSubtitle1(text = restaurant.filterIds[0], color = Subtitle)
+                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(3.dp),
                     ) {
@@ -93,7 +96,7 @@ private fun ListItem(
                                 .align(Alignment.Bottom),
                             tint = Color.Red,
                         )
-                        TextFooter1(text = "30 mins", color = Footer)
+                        TextFooter1(text = restaurant.delivery_time_minutes.toString(), color = Footer)
                     }
                 }
             }
