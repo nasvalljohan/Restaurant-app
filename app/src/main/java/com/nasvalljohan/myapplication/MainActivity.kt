@@ -3,7 +3,7 @@ package com.nasvalljohan.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.nasvalljohan.myapplication.di.viewModel
+import com.nasvalljohan.myapplication.di.AppModule
 import com.nasvalljohan.myapplication.ui.theme.UmainCodeTestTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         startKoin {
             androidLogger()
             androidContext(applicationContext)
-            koin.loadModules(listOf(viewModel))
+            koin.loadModules(listOf(AppModule))
         }
 
         setContent {
