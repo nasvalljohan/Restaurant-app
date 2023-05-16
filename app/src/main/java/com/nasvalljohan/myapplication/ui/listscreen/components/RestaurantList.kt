@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,27 +49,28 @@ fun RestaurantList(onEvent: (ListScreenEvent) -> Unit) {
 @Composable
 private fun ListItem(
     onEvent: (ListScreenEvent) -> Unit,
-    restaurantId: Int
+    restaurantId: Int,
 ) {
-    Column(
+    Box(
         Modifier
+            .size(343.dp, 196.dp)
             .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp))
             .background(Color.White)
             .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurantId)) },
     ) {
         Box(
             modifier = Modifier
-                .height(132.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(Color.Green),
         )
         Box(
             modifier = Modifier
-                .padding(8.dp)
-                .height(48.dp),
-            contentAlignment = Alignment.TopStart,
+                .fillMaxWidth()
+                .background(Color.White)
+                .align(Alignment.BottomStart),
         ) {
             Column(
+                modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.Top.also { Arrangement.spacedBy(2.dp) },
             ) {
                 TextTitle1(text = "Wayne's Smelly Eggs", color = DarkText)
