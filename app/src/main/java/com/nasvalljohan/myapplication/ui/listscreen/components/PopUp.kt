@@ -56,12 +56,13 @@ fun PopUp(onEvent: (ListScreenEvent) -> Unit) {
                     .clickable { onEvent(ListScreenEvent.BackPress) },
             )
         }
+
         Column(
             modifier = Modifier
                 .offset(y = (-45).dp)
                 .size(343.dp, 144.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(Color.Gray)
+                .background(Color.White)
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceBetween,
