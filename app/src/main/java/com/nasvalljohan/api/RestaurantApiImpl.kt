@@ -12,10 +12,13 @@ class RestaurantApiImpl(
 ) : RestaurantApi {
 
     override suspend fun getRestaurants(): Result<Restaurants> {
-        val response = client.get("$base/restaurants") {
-            accept(ContentType.Application.Json)
+        return try {
+            val response = client.get("$base/restaurants")
+            val restaurants = response.body<Restaurants>()
+            Result.success(restaurants)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        return response.body()
     }
 
     override suspend fun getFilters(id: String): Result<Restaurants> {

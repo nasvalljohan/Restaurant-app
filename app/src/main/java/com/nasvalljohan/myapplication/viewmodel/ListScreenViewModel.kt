@@ -22,7 +22,7 @@ class ListScreenViewModel(
     fun getShit() {
         viewModelScope.launch {
             val response = repo.getRestaurants().getOrNull()
-
+            println(response)
         }
     }
 }

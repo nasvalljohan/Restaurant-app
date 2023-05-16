@@ -1,6 +1,8 @@
 package com.nasvalljohan.repository.model
 
-@kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Restaurants(
-    val restaurants: List<Restaurant>
+    val restaurants: List<Restaurant>,
 )
