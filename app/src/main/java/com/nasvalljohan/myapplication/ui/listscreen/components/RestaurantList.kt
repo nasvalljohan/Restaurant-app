@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.nasvalljohan.myapplication.R
+import com.nasvalljohan.myapplication.ui.listscreen.helpers.translateIdToCategory
 import com.nasvalljohan.myapplication.ui.repository.model.Restaurant
 import com.nasvalljohan.myapplication.ui.theme.DarkText
 import com.nasvalljohan.myapplication.ui.theme.Footer
@@ -47,7 +50,7 @@ fun RestaurantList(onEvent: (ListScreenEvent) -> Unit, state: ListScreenState) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(state.restaurants) { item ->
+        items(state.restaurantList) { item ->
             ListItem(onEvent = onEvent, restaurant = item)
         }
     }
@@ -68,7 +71,7 @@ private fun ListItem(
             Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp))
-                .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurant.id.toInt())) },
+                .clickable { onEvent(ListScreenEvent.RestaurantSelectedEvent(restaurant.id)) },
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -110,7 +113,19 @@ private fun ListItem(
                         }
                     }
                     if (restaurant.filterIds.isNotEmpty()) {
-                        TextSubtitle1(text = "TODO", color = Subtitle)
+                        LazyRow {
+                            restaurant.let {
+                                itemsIndexed(it.filterIds) { index, id ->
+                                    TextSubtitle1(
+                                        text = translateIdToCategory(id),
+                                        color = Subtitle,
+                                    )
+                                    if (index < it.filterIds.size - 1) {
+                                        TextSubtitle1(text = " • ", color = Subtitle)
+                                    }
+                                }
+                            }
+                        }
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(3.dp),
