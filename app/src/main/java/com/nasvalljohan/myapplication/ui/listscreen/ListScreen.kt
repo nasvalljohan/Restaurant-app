@@ -79,7 +79,7 @@ fun ListScreenContent(
                 ),
             ),
         ) {
-            PopUp(onEvent = onEvent)
+            PopUp(onEvent = onEvent, state = state)
         }
     }
 }
