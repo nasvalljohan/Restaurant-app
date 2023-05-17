@@ -1,8 +1,8 @@
 # Restaurant-app
 
 Built with..
-Jetpack Compose
-MVI
-Koin
-Retrofit
-Coil
+Jetpack Compose -
+- MVI
+- Koin
+- Retrofit
+- Coil
