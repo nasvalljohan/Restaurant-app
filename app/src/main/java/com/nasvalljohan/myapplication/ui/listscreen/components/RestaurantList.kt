@@ -48,7 +48,6 @@ fun RestaurantList(onEvent: (ListScreenEvent) -> Unit, state: ListScreenState) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(state.restaurants) { item ->
-            println(item)
             ListItem(onEvent = onEvent, restaurant = item)
         }
     }
@@ -88,24 +87,45 @@ private fun ListItem(
                     .align(Alignment.BottomStart),
             ) {
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(8.dp).fillMaxWidth(),
                     verticalArrangement = Arrangement.Top.also { Arrangement.spacedBy(2.dp) },
                 ) {
-                    TextTitle1(text = restaurant.name, color = DarkText)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        TextTitle1(text = restaurant.name, color = DarkText)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(3.dp),
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.star_icon),
+                                contentDescription = null,
+                                modifier = Modifier.size(12.dp),
+                                tint = Color.Yellow,
+                            )
+                            TextFooter1(text = restaurant.rating.toString(), color = DarkText)
+                        }
+                    }
                     if (restaurant.filterIds.isNotEmpty()) {
                         TextSubtitle1(text = "TODO", color = Subtitle)
                     }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(3.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.clock_icon),
                             contentDescription = "Down",
-                            modifier = Modifier.size(10.dp)
-                                .align(Alignment.Bottom),
+                            modifier = Modifier.size(10.dp),
                             tint = Color.Red,
                         )
-                        TextFooter1(text = restaurant.delivery_time_minutes.toString(), color = Footer)
+                        TextFooter1(
+                            text = "${restaurant.delivery_time_minutes} min",
+                            color = Footer,
+                        )
                     }
                 }
             }

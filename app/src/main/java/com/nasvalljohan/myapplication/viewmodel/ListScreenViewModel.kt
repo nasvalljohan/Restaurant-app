@@ -1,6 +1,5 @@
 package com.nasvalljohan.myapplication.viewmodel
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import com.nasvalljohan.myapplication.ui.repository.GetFiltersUseCase
 import com.nasvalljohan.myapplication.ui.repository.GetRestaurantUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class ListScreenViewModel(
@@ -19,44 +17,70 @@ class ListScreenViewModel(
     private val getAvailabilityUseCase: GetAvailabilityUseCase,
 ) : ViewModel() {
 
-    private val setState = mutableStateOf(ListScreenState())
-    val state: State<ListScreenState> = setState
+    var state = mutableStateOf(ListScreenState())
+        private set
 
     init {
         getRestaurants()
+        getFilters()
     }
 
     fun handleEvents(event: ListScreenEvent) {
         when (event) {
-            is ListScreenEvent.FilterEvent -> println(state.value.restaurants.size)
+            is ListScreenEvent.FilterEvent -> {
+                showFilteredList(event)
+            }
             is ListScreenEvent.RestaurantSelectedEvent -> togglePopUp()
             ListScreenEvent.BackPress -> {
-                getRestaurants()
                 togglePopUp()
+                getRestaurants()
+                getFilters()
             }
         }
     }
 
+    private fun showFilteredList(event: ListScreenEvent.FilterEvent) {
+        if (event.selectedButtonId == state.value.selectedButtonId) {
+            state.value = state.value.copy(selectedButtonId = -1)
+        } else {
+            state.value = state.value.copy(selectedButtonId = event.selectedButtonId)
+        }
+
+        if (state.value.selectedButtonId == -1) {
+            getRestaurantUseCase().onEach { result ->
+                val updatedRestaurants = result.restaurants.toMutableList()
+                state.value = state.value.copy(restaurants = updatedRestaurants)
+            }.launchIn(viewModelScope)
+        }
+
+        if (event.selectedButtonId == state.value.selectedButtonId && event.filterId.isNotEmpty()) {
+            val filteredList =
+                state.value.restaurants.filter { it.filterIds.contains(event.filterId) }
+                    .toMutableList()
+            state.value = state.value.copy(restaurants = filteredList)
+        }
+        println(state.value.restaurants.size)
+    }
+
     private fun togglePopUp() {
-        setState.value = ListScreenState(isPopUpOpen = !state.value.isPopUpOpen)
+        state.value = ListScreenState(isPopUpOpen = !state.value.isPopUpOpen)
     }
 
     private fun getRestaurants() {
-        setState.value = ListScreenState(isLoading = true)
-        getRestaurantUseCase().onEach {
-            setState.value = ListScreenState(restaurants = it.restaurants.toMutableList())
+        getRestaurantUseCase().onEach { result ->
+            val updatedRestaurants = result.restaurants.toMutableList()
+            state.value = state.value.copy(restaurants = updatedRestaurants)
         }.launchIn(viewModelScope)
     }
 
     private fun getFilters() {
-        viewModelScope.launch {
-            Constants.FILTERS.forEach {
-                setState.value =
-                    ListScreenState(
-                        filters = state.value.filters + getFiltersUseCase(it).toList(),
-                        restaurants = state.value.restaurants,
-                    )
-            }
+        for (i in Constants.FILTERS) {
+            getFiltersUseCase(i).onEach { filter ->
+                val updatedFilters = state.value.filters.toMutableList()
+                updatedFilters.add(filter)
+
+                state.value = state.value.copy(filters = updatedFilters)
+            }.launchIn(viewModelScope)
         }
     }
 

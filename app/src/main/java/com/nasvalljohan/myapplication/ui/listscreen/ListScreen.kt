@@ -54,7 +54,7 @@ fun ListScreenContent(
             verticalArrangement = Arrangement.spacedBy(22.dp),
         ) {
             LogoBar()
-            FilterList(onEvent = onEvent)
+            FilterList(onEvent = onEvent, state = state)
             Box(
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
