@@ -7,9 +7,9 @@ import com.nasvalljohan.myapplication.Constants
 import com.nasvalljohan.myapplication.ui.repository.GetAvailabilityUseCase
 import com.nasvalljohan.myapplication.ui.repository.GetFiltersUseCase
 import com.nasvalljohan.myapplication.ui.repository.GetRestaurantUseCase
+import com.nasvalljohan.myapplication.ui.repository.model.SelectedRestaurant
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 class ListScreenViewModel(
     private val getFiltersUseCase: GetFiltersUseCase,
@@ -30,13 +30,19 @@ class ListScreenViewModel(
             is ListScreenEvent.FilterEvent -> {
                 showFilteredList(event)
             }
-            is ListScreenEvent.RestaurantSelectedEvent -> togglePopUp()
+            is ListScreenEvent.RestaurantSelectedEvent -> {
+                togglePopUp()
+                showSelectedRestaurant(event)
+                getAvailability(event.selectedRestaurant)
+            }
             ListScreenEvent.BackPress -> {
                 togglePopUp()
-                getRestaurants()
-                getFilters()
             }
         }
+    }
+
+    private fun togglePopUp() {
+        state.value = state.value.copy(isPopUpOpen = !state.value.isPopUpOpen)
     }
 
     private fun showFilteredList(event: ListScreenEvent.FilterEvent) {
@@ -47,29 +53,50 @@ class ListScreenViewModel(
         }
 
         if (state.value.selectedButtonId == -1) {
-            getRestaurantUseCase().onEach { result ->
-                val updatedRestaurants = result.restaurants.toMutableList()
-                state.value = state.value.copy(restaurants = updatedRestaurants)
-            }.launchIn(viewModelScope)
+            getRestaurants()
         }
 
         if (event.selectedButtonId == state.value.selectedButtonId && event.filterId.isNotEmpty()) {
             val filteredList =
                 state.value.restaurants.filter { it.filterIds.contains(event.filterId) }
                     .toMutableList()
-            state.value = state.value.copy(restaurants = filteredList)
+            state.value = state.value.copy(restaurantList = filteredList)
         }
-        println(state.value.restaurants.size)
     }
 
-    private fun togglePopUp() {
-        state.value = ListScreenState(isPopUpOpen = !state.value.isPopUpOpen)
+    private fun showSelectedRestaurant(event: ListScreenEvent.RestaurantSelectedEvent) {
+        state.value.restaurants.forEach {
+            if (it.id == event.selectedRestaurant) {
+                state.value = state.value.copy(
+                    selectedRestaurant = SelectedRestaurant(
+                        it.filterIds,
+                        it.name,
+                        if (state.value.restaurantAvailability?.is_currently_open == true) {
+                            "Open"
+                        } else {
+                            "Closed"
+                        },
+                        it.image_url,
+                    ),
+                )
+            }
+        }
+    }
+
+    private fun getAvailability(id: String) {
+        getAvailabilityUseCase(id).onEach {
+            val updatedAvailability = state.value.restaurantAvailability
+            state.value = state.value.copy(restaurantAvailability = updatedAvailability)
+        }.launchIn(viewModelScope)
     }
 
     private fun getRestaurants() {
         getRestaurantUseCase().onEach { result ->
             val updatedRestaurants = result.restaurants.toMutableList()
-            state.value = state.value.copy(restaurants = updatedRestaurants)
+            state.value = state.value.copy(
+                restaurants = updatedRestaurants,
+                restaurantList = updatedRestaurants,
+            )
         }.launchIn(viewModelScope)
     }
 
@@ -81,12 +108,6 @@ class ListScreenViewModel(
 
                 state.value = state.value.copy(filters = updatedFilters)
             }.launchIn(viewModelScope)
-        }
-    }
-
-    private fun getAvailability() {
-        viewModelScope.launch {
-            TODO()
         }
     }
 }
