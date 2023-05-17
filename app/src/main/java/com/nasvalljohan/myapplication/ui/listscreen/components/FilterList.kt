@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,9 +28,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.nasvalljohan.myapplication.R
-import com.nasvalljohan.myapplication.ui.theme.DarkText
-import com.nasvalljohan.myapplication.ui.theme.LightText
-import com.nasvalljohan.myapplication.ui.theme.Selected
+import com.nasvalljohan.myapplication.ui.listscreen.helpers.getBackgroundColor
+import com.nasvalljohan.myapplication.ui.listscreen.helpers.getTextColor
 import com.nasvalljohan.myapplication.ui.theme.font.TextTitle2
 import com.nasvalljohan.myapplication.viewmodel.ListScreenEvent
 import com.nasvalljohan.myapplication.viewmodel.ListScreenState
@@ -63,15 +61,6 @@ fun FilterList(onEvent: (ListScreenEvent) -> Unit, state: ListScreenState) {
     }
 }
 
-@Composable
-private fun getButtonBackground(buttonId: Int, selectedButtonId: Int): Color {
-    return if (buttonId == selectedButtonId) Selected else Color.White
-}
-
-@Composable fun getTextColor(buttonId: Int, selectedButtonId: Int): Color {
-    return if (buttonId == selectedButtonId) LightText else DarkText
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FilterListItem(
@@ -97,7 +86,7 @@ private fun FilterListItem(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(RoundedCornerShape(24.dp))
-                .background(getButtonBackground(buttonId = buttonId, selectedButtonId = selectedButtonId)),
+                .background(getBackgroundColor(buttonId = buttonId, selectedButtonId = selectedButtonId)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
